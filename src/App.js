@@ -8,9 +8,10 @@ import PropTypes from 'prop-types';
 import Alert from './components/layout/Alert';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import About from './components/pages/About';
+import User from './components/users/User';
 
 class App extends Component {
-  state = { users: [], loading: false, alert: null };
+  state = { users: [], loading: false, alert: null, user: {} };
   static propTypes = {
     searchUsers: PropTypes.func.isRequired,
     clearUsers: PropTypes.func.isRequired,
@@ -29,6 +30,16 @@ class App extends Component {
     this.setState({ users: response.data.items, loading: false });
   };
 
+  //Get a single github user
+  getUser = async username => {
+    this.setState({ loading: true });
+    const response = await axios.get(
+      `https://api.github.com/users/${username}?client_id=${
+        process.env.REACT_APP_GITHUB_CLIENT_ID
+      }&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
+    );
+    this.setState({ user: response.data, loading: false });
+  };
   //Clear users from state
   clearUsers = () => {
     this.setState({ users: [], loading: false });
@@ -40,7 +51,7 @@ class App extends Component {
     setTimeout(() => this.setState({ alert: null }), 5000);
   };
   render() {
-    const { users, loading } = this.state;
+    const { users, loading, user } = this.state;
     return (
       <Router>
         <div className='App'>
@@ -64,6 +75,18 @@ class App extends Component {
                 )}
               />
               <Route exact path='/about' component={About} />
+              <Route
+                exact
+                path='/user/:login'
+                render={props => (
+                  <User
+                    {...props}
+                    getUser={this.getUser}
+                    user={user}
+                    loading={loading}
+                  />
+                )}
+              />
             </Switch>
           </div>
         </div>
