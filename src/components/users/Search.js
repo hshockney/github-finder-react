@@ -8,6 +8,8 @@ class Search extends Component {
     this.setState({ [event.target.name]: event.target.value });
   onSubmit = event => {
     event.preventDefault();
+    this.props.searchUsers(this.state.text);
+    this.setState({ text: '' });
   };
   render() {
     return (
