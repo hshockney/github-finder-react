@@ -426,3 +426,7 @@ table th {
         justify-content: center;
     }
 }
+
+.icon {
+    margin-right: 10px;
+}
