@@ -8,8 +8,12 @@ class Search extends Component {
     this.setState({ [event.target.name]: event.target.value });
   onSubmit = event => {
     event.preventDefault();
-    this.props.searchUsers(this.state.text);
-    this.setState({ text: '' });
+    if (this.state.text === '') {
+      this.props.setAlert('Please enter a search term', 'light');
+    } else {
+      this.props.searchUsers(this.state.text);
+      this.setState({ text: '' });
+    }
   };
   render() {
     const { showClear, clearUsers } = this.props;
