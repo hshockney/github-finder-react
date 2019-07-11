@@ -11,25 +11,9 @@ import About from './components/pages/About';
 import User from './components/users/User';
 import GithubState from './context/github/GithubState';
 const App = () => {
-  const [users, setUsers] = useState([]);
-  const [user, setUser] = useState({});
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [alert, setAlerts] = useState(null);
-
-  //Search Github users
-
-  //Get a single github user
-  const getUser = async username => {
-    setLoading(true);
-    const response = await axios.get(
-      `https://api.github.com/users/${username}?client_id=${
-        process.env.REACT_APP_GITHUB_CLIENT_ID
-      }&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
-    );
-    setUser(response.data);
-    setLoading(false);
-  };
 
   //Get users repos
   const getUserRepos = async username => {
@@ -40,12 +24,6 @@ const App = () => {
       }&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`
     );
     setRepos(response.data);
-    setLoading(false);
-  };
-
-  //Clear users from state
-  const clearUsers = () => {
-    setUsers([]);
     setLoading(false);
   };
 
@@ -68,12 +46,8 @@ const App = () => {
                 path='/'
                 render={props => (
                   <Fragment>
-                    <Search
-                      clearUsers={clearUsers}
-                      showClear={users.length > 0 ? true : false}
-                      setAlert={showAlert}
-                    />
-                    <Users loading={loading} users={users} />
+                    <Search setAlert={showAlert} />
+                    <Users />
                   </Fragment>
                 )}
               />
@@ -82,14 +56,7 @@ const App = () => {
                 exact
                 path='/user/:login'
                 render={props => (
-                  <User
-                    {...props}
-                    getUser={getUser}
-                    user={user}
-                    loading={loading}
-                    getUserRepos={getUserRepos}
-                    repos={repos}
-                  />
+                  <User {...props} getUserRepos={getUserRepos} repos={repos} />
                 )}
               />
             </Switch>
@@ -101,9 +68,6 @@ const App = () => {
 };
 
 App.propTypes = {
-  searchUsers: PropTypes.func.isRequired,
-  clearUsers: PropTypes.func.isRequired,
-  showClear: PropTypes.bool.isRequired,
   setAlerts: PropTypes.func.isRequired
 };
 export default App;
