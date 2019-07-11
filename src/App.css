@@ -430,3 +430,21 @@ table th {
 .icon {
     margin-right: 10px;
 }
+
+.grid-styling {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem 1rem;
+}
+
+.notfoundImg {
+    max-width: 100%;
+}
+
+@media (max-width:767px) {
+    .grid-styling {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem 1rem;
+    }
+}
