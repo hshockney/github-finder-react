@@ -6,11 +6,17 @@ const Search = ({ setAlert }) => {
   const githubContext = useContext(GithubContext);
   const alertContext = useContext(AlertContext);
   const [text, setText] = useState('');
+  const { users } = githubContext;
   const onChange = event => setText(event.target.value);
   const onSubmit = event => {
     event.preventDefault();
     if (text === '') {
       alertContext.setAlert('Please enter a search term', 'light');
+    } else if (users.length === 0) {
+      alertContext.setAlert(
+        'Sorry, your search did not return any results',
+        'light'
+      );
     } else {
       githubContext.searchUsers(text);
       setText('');
